@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Serialize_People
 {
     [Serializable]
-    class Person : IDeserializationCallback
+    public class Person : IDeserializationCallback
     {
         public string name;
         public DateTime dateOfBirth;
