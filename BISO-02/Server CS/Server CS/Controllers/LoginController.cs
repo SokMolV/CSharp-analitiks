@@ -4,10 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Server_CS.Controllers
 {
@@ -15,39 +18,13 @@ namespace Server_CS.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        /// <summary>
-        ///     Объект работы с файлом конфигурации приложения
-        /// </summary>
         private readonly IConfiguration _config;
 
-        /// <summary>
-        ///     Конструктор
-        /// </summary>
-        /// <param name="config">Объект работы с файлом конфигурации приложения</param>
         public LoginController(IConfiguration config)
         {
             _config = config;
         }
-
-        /// <summary>
-        ///     Проверка на уникальность ника
-        ///     <br> GET api/Login</br>
-        /// </summary>
-        /// <param name="username">Ник</param>
-        /// <returns>Возвращает истину если ник занят</returns>
         [AllowAnonymous]
-        [HttpGet]
-        public IActionResult Get(string username)
-        {
-            return Ok(new {response = Program.RegDatas.Find(regData => regData.Username == username) != default});
-        }
-
-        /// <summary>
-        ///     Функция Логин/Регистрация
-        ///     <br> POST api/Login</br>
-        /// </summary>
-        /// <param name="login">Связка логин/пароль</param>
-        /// <returns>Вернет ok если всё успешно</returns>
         [HttpPost]
         public IActionResult Login([FromBody] RegData login)
         {
@@ -55,19 +32,15 @@ namespace Server_CS.Controllers
             var user = AuthenticateUser(login);
 
             if (user == null) return response;
-            if (string.IsNullOrEmpty(user.Username)) return response;
+
+            JsonWorker.Save(Program.RegDatas);
 
             var tokenString = GenerateJSONWebToken(user);
-            response = Ok(new {token = tokenString});
+            response = Ok(new { token = tokenString });
 
             return response;
         }
 
-        /// <summary>
-        ///     Функция генерации токена
-        /// </summary>
-        /// <param name="userInfo">Связка логин/пароль</param>
-        /// <returns>Токен</returns>
         private string GenerateJSONWebToken(RegData userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -88,24 +61,20 @@ namespace Server_CS.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        /// <summary>
-        ///     Функция авторизации пользователя.
-        ///     <br>Если нету то создаст.</br>
-        /// </summary>
-        /// <param name="login">Связка логин/пароль</param>
-        /// <returns>Пользователя чата</returns>
         private RegData AuthenticateUser(RegData login)
         {
             RegData user = null;
 
-            if (Program.RegDatas.Find(regData => regData.Username == login.Username) == default)
+            if (Program.RegDatas.Find(regData => regData.Username == login.Username)==default)
             {
                 Program.RegDatas.Add(login);
                 return login;
             }
 
-            foreach (var regData in Program.RegDatas.Where(regData =>
-                regData.Username == login.Username && regData.Password == login.Password)) return regData;
+            foreach (var regData in Program.RegDatas.Where(regData => regData.Username == login.Username && regData.Password == login.Password))
+            {
+                return regData;
+            }
 
             return user;
         }
