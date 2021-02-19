@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace HelloApp
 {
@@ -11,6 +12,28 @@ namespace HelloApp
   }
   class Program
   {
+    static async Task ghf()
+    {
+      Person marya = new Person { Name = "Marya", Age = 19 };
+      string json = JsonSerializer.Serialize<Person>(marya);
+      Console.WriteLine(json);
+      Person restoredPerson = JsonSerializer.Deserialize<Person>(json);
+      Console.WriteLine(restoredPerson.Name);
+      // сохранение данных
+      using (FileStream fs = new FileStream("user.json", FileMode.OpenOrCreate))
+      {
+        Person tom = new Person() { Name = "Tom", Age = 35 };
+        await JsonSerializer.SerializeAsync<Person>(fs, tom);
+        Console.WriteLine("Data has been saved to file");
+      }
+
+      // чтение данных
+      using (FileStream fs = new FileStream("user.json", FileMode.OpenOrCreate))
+      {
+        Person restoredPerson_2 = await JsonSerializer.DeserializeAsync<Person>(fs);
+        Console.WriteLine($"Name: {restoredPerson_2.Name}  Age: {restoredPerson_2.Age}");
+      }
+    }
     static void Main(string[] args)
     {
       DriveInfo[] drives = DriveInfo.GetDrives();
@@ -125,13 +148,8 @@ namespace HelloApp
         // File.Delete(path);
       }
 
-      Person marya = new Person { Name = "Marya", Age = 19 };
-      string json = JsonSerializer.Serialize<Person>(marya);
-      Console.WriteLine(json);
-      Person restoredPerson = JsonSerializer.Deserialize<Person>(json);
-      Console.WriteLine(restoredPerson.Name);
-
-
+  
+      ghf();
 
     }
   }
