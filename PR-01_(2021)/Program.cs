@@ -10,6 +10,12 @@ namespace HelloApp
     public string Name { get; set; }
     public int Age { get; set; }
   }
+  class User
+  {
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public string Company { get; set; }
+  }
   class Program
   {
     static async Task ghf()
@@ -32,6 +38,14 @@ namespace HelloApp
       {
         Person restoredPerson_2 = await JsonSerializer.DeserializeAsync<Person>(fs);
         Console.WriteLine($"Name: {restoredPerson_2.Name}  Age: {restoredPerson_2.Age}");
+      }
+
+      FileInfo fileGInf = new FileInfo("user.json");
+      if (fileGInf.Exists)
+      {
+        fileGInf.Delete();
+        // альтернатива с помощью класса File
+        // File.Delete(path);
       }
     }
     static void Main(string[] args)
@@ -151,6 +165,7 @@ namespace HelloApp
   
       ghf();
 
+      
     }
   }
 }
