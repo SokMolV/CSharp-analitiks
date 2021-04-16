@@ -16,6 +16,7 @@ namespace first_program
   }
   class Program
   {
+    //string put =;
     static async Task Main(string[] args)
     {
       char choice_2;
@@ -29,7 +30,7 @@ namespace first_program
         Console.WriteLine("4) Работа с ZIP сжатием.");
         Console.WriteLine("5) Работа с форматом JSON.");
         Console.WriteLine("0) Выход из программы.");
-        Console.Write("Номер команды: ");
+        Console.Write("Выберите номер команды: ");
         int choice = Convert.ToInt32(Console.ReadLine());
         switch (choice)
         {
@@ -55,7 +56,7 @@ namespace first_program
           case 2:
             {
               Console.WriteLine("2.Работа с файлами");
-              string path = @"D:\Documents\GitHub";
+              string path = @"D:\Documents\SOKOL";
               Console.WriteLine("Введите строку для записи в файл:");
               string text = Console.ReadLine();
               // запись в файл
@@ -124,14 +125,14 @@ namespace first_program
                 list.Add(User);
               }
               xdoc.Add(list);
-              xdoc.Save(@"D:\Documents\GitHub\users.xml");
+              xdoc.Save(@"D:\Documents\SOKOL\users.xml");
 
               Console.Write("Прочитать XML файл? (+ OR -): ");
               switch (Console.ReadLine())
               {
                 case "+":
                   Console.WriteLine();
-                  xDoc.Load(@"D:\Documents\GitHub\users.xml");
+                  xDoc.Load(@"D:\Documents\SOKOL\users.xml");
                   XmlElement xRoot = xDoc.DocumentElement;
                   foreach (XmlNode xnode in xRoot)
                   {
@@ -161,7 +162,7 @@ namespace first_program
               switch (Console.ReadLine())
               {
                 case "+":
-                  FileInfo xmlfilecheck = new FileInfo(@"D:\Documents\GitHub\users.xml");
+                  FileInfo xmlfilecheck = new FileInfo(@"D:\Documents\SOKOL\users.xml");
                   if (xmlfilecheck.Exists)
                   {
                     xmlfilecheck.Delete();
@@ -181,9 +182,9 @@ namespace first_program
           case 4:
             {
               Console.WriteLine("Работа с ZIP:");
-              string SourceFile = @"D:\Documents\GitHub\oop.txt"; // исходный файл
-              string CompressedFile = @"D:\Documents\GitHub\bin.gz"; // сжатый файл
-              string TargetFile = @"D:\Documents\GitHub\oop1.txt"; // восстановленный файл
+              string SourceFile = @"D:\Documents\SOKOL\oop.txt"; // исходный файл
+              string CompressedFile = @"D:\Documents\SOKOL\bin.gz"; // сжатый файл
+              string TargetFile = @"D:\Documents\SOKOL\oop1.txt"; // восстановленный файл
                                                                    // создание сжатого файла
               Compress(SourceFile, CompressedFile);
               // чтение из сжатого файла
@@ -205,7 +206,7 @@ namespace first_program
                 case "-":
                   break;
                 default:
-                  Console.WriteLine("Введены неправильные данные!");
+                  Console.WriteLine("Введены неправильные данные! Попробуйте снова!");
                   break;
               }
               Console.WriteLine();
@@ -215,24 +216,24 @@ namespace first_program
             {
               Console.WriteLine("Работа с JSON:");
               // сохранение данных
-              using (FileStream fs = new FileStream(@"D:\Documents\GitHub\user.json", FileMode.OpenOrCreate))
+              using (FileStream fs = new FileStream(@"D:\Documents\SOKOL\user.json", FileMode.OpenOrCreate))
               {
                 Person Marya = new Person() { Name = "Marya", Age = 19 };
                 await JsonSerializer.SerializeAsync<Person>(fs, Marya);
-                Console.WriteLine("Данные были введены автоматически и они сохранены!");
+                Console.WriteLine("Данные введены автоматически и они сохранены!");
               }
 
               // чтение данных
-              using (FileStream fs = new FileStream(@"D:\Documents\GitHub\user.json", FileMode.OpenOrCreate))
+              using (FileStream fs = new FileStream(@"D:\Documents\SOKOL\user.json", FileMode.OpenOrCreate))
               {
                 Person restoredPerson = await JsonSerializer.DeserializeAsync<Person>(fs);
                 Console.WriteLine($"Name: {restoredPerson.Name}  Age: {restoredPerson.Age}");
               }
-              Console.Write("Удалить файл? (+ OR -): ");
+              Console.Write("Вы хотите удалить файл? (+ OR -): ");
               switch (Console.ReadLine())
               {
                 case "+":
-                  File.Delete(@"D:\Documents\GitHub\user.json");
+                  File.Delete(@"D:\Documents\SOKOL\user.json");
                   Console.WriteLine("\nФайл удален!");
                   break;
                 case "-":
@@ -245,10 +246,10 @@ namespace first_program
             break;
         }
         Console.WriteLine("================================");
-        Console.Write("\nПродолжить? y/n: ");
+        Console.Write("\nХотите продолжить? + OR -: ");
         choice_2 = Convert.ToChar(Console.ReadLine());
         Console.Write('\n');
-      } while (choice_2 != 'n');
+      } while (choice_2 != '-');
     }
     public static void Compress(string sourceFile, string compressedFile)
     {
